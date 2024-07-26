@@ -1,26 +1,27 @@
 "use client";
 
-import { Badge } from "@/components/ui/catalyst/badge";
 import React from "react";
+import { Badge } from "@/components/ui/catalyst/badge";
+import Step from "@/types/step";
 
-const steps = [
+const steps: Array<Step> = [
   {
-    id: 1,
+    id: "1",
     name: "开始",
     color: "lime",
   },
   {
-    id: 2,
+    id: "2",
     name: "help wanted",
     color: "purple",
   },
   {
-    id: 3,
+    id: "3",
     name: "bug",
     color: "rose",
   },
   {
-    id: 4,
+    id: "4",
     name: "bug2",
     color: "rose",
   },
@@ -29,7 +30,7 @@ const steps = [
 export default function WfSidebar() {
   const handleDragStart = (
     event: React.DragEvent<HTMLDivElement>,
-    step: any
+    step: Step
   ) => {
     const dataTransfer = event.dataTransfer;
     if (dataTransfer) {
