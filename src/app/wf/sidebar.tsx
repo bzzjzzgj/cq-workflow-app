@@ -2,7 +2,7 @@
 
 import React from "react";
 import { Badge } from "@/components/ui/catalyst/badge";
-import Step from "@/types/step";
+import Step from "@/types/workflow/step";
 
 const steps: Array<Step> = [
   {

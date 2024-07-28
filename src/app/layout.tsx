@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import ClientLayout from "./clientLayout";
+
 import "@/styles/tailwind.css";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -19,7 +21,9 @@ export default function RootLayout({
       lang="zh-CN"
       className="text-zinc-950 antialiased lg:bg-zinc-100 dark:bg-zinc-900 dark:text-white dark:lg:bg-zinc-950"
     >
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        <ClientLayout>{children}</ClientLayout>
+      </body>
     </html>
   );
 }
