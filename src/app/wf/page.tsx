@@ -11,45 +11,71 @@ import {
   applyEdgeChanges,
   applyNodeChanges,
   Node,
+  Edge,
 } from "@xyflow/react";
+
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/store";
+
+import {
+  changeEdges,
+  changeSteps,
+  addStep,
+  addEdge,
+} from "@/store/slices/workflowSlice";
+
 import Step from "@/types/workflow/step";
 
 import "@xyflow/react/dist/style.css";
-import { useState } from "react";
-
-const initialNodes = [
-  { id: "1", position: { x: 0, y: 0 }, data: { label: "1" } },
-  { id: "2", position: { x: 0, y: 100 }, data: { label: "2" } },
-];
-const initialEdges = [{ id: "e1-2", source: "1", target: "2" }];
+import React, { useState } from "react";
 
 export default function Example() {
-  const [nodes, setNodes] = useState(initialNodes);
-  const [edges, setEdges] = useState(initialEdges);
+  const dispatch = useDispatch();
+  const nodes = useSelector((state: RootState) => state.workflow.steps);
+  const edges = useSelector((state: RootState) => state.workflow.edges);
+  const [selfEdges, setSelfEdges] = useState<Array<Edge>>([]);
+  const [selfNodes, setSelfNodes] = useState<Array<Node>>([]);
 
-  const onNodesChange = (changes: any[]) => {
-    // 这里应用任何必要的变化到你的节点数据
-    // 例如使用applyNodeChanges函数
-    // const newNodes = applyNodeChanges(changes, nodes);
-    // 然后更新状态
-    setNodes((nds) => applyNodeChanges(changes, nds));
+  const onNodeDragStop = (
+    event: React.MouseEvent,
+    node: Node,
+    nodes: Node[]
+  ) => {
+    dispatch(changeSteps(selfNodes));
+    dispatch(changeEdges(selfEdges));
   };
 
-  const onEdgesChange = (changes: EdgeChange[]) =>
-    setEdges((eds) => applyEdgeChanges(changes, eds));
+  const onNodesChange = (changes: NodeChange<Node>[]) => {
+    setSelfNodes((s) => applyNodeChanges(changes, selfNodes));
+  };
+
+  const onEdgesChange = (changes: EdgeChange[]) => {
+    setSelfEdges((s) => applyEdgeChanges(changes, selfEdges));
+  };
 
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     const data = e.dataTransfer.getData("application/json");
     const step: Step = JSON.parse(data);
 
-    initialNodes.push({
-      id: "drop" + step.id,
-      data: { label: step.name },
-      position: { x: 0, y: 200 },
-    });
+    // dispatch(
+    //   addStep({
+    //     id: `${Date.now()}`,
+    //     data: { label: step.name },
+    //     position: { x: 0, y: 200 },
+    //   })
+    // );
 
-    console.log("Drop", initialNodes);
+    setSelfNodes((nds) => [
+      ...nds,
+      {
+        id: `${Date.now()}`,
+        data: { label: step.name },
+        position: { x: 0, y: 200 },
+      },
+    ]);
+
+    dispatch(changeSteps(selfNodes));
   };
 
   const handleDragOver = (e) => {
@@ -60,7 +86,13 @@ export default function Example() {
 
   return (
     <div className="h-screen" onDrop={handleDrop} onDragOver={handleDragOver}>
-      <ReactFlow nodes={nodes} edges={edges} onNodesChange={onNodesChange}>
+      <ReactFlow
+        nodes={selfNodes}
+        edges={selfEdges}
+        onNodesChange={onNodesChange}
+        onEdgesChange={onEdgesChange}
+        onNodeDragStop={onNodeDragStop}
+      >
         <Controls />
         <MiniMap />
         <Background variant={BackgroundVariant.Dots} gap={12} size={1} />
