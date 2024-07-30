@@ -7,13 +7,14 @@ interface Workflow {
 }
 
 interface WorkflowState {
-  workflow: Workflow;
+  data: Workflow;
+
   loading: boolean;
   error: string | null;
 }
 
 const initialState: WorkflowState = {
-  workflow: { steps: [], edges: [] },
+  data: { steps: [], edges: [] },
   loading: false,
   error: null,
 };
@@ -32,16 +33,16 @@ const workflowSlice = createSlice({
   initialState,
   reducers: {
     changeSteps: (state, action: PayloadAction<Array<Node>>) => {
-      state.workflow.steps = action.payload;
+      state.data.steps = action.payload;
     },
     changeEdges: (state, action: PayloadAction<Array<Edge>>) => {
-      state.workflow.edges = action.payload;
+      state.data.edges = action.payload;
     },
     addStep: (state, action: PayloadAction<Node>) => {
-      state.workflow.steps.push(action.payload);
+      state.data.steps.push(action.payload);
     },
     addEdge: (state, action: PayloadAction<Edge>) => {
-      state.workflow.edges.push(action.payload);
+      state.data.edges.push(action.payload);
     },
   },
   extraReducers(builder) {
@@ -54,7 +55,7 @@ const workflowSlice = createSlice({
         fetchWorkflows.fulfilled,
         (state, action: PayloadAction<Workflow>) => {
           state.loading = false;
-          state.workflow = action.payload;
+          state.data = action.payload;
         }
       )
       .addCase(fetchWorkflows.rejected, (state, action) => {

@@ -45,6 +45,7 @@ export default function WfSidebar() {
           key={step.id}
           draggable
           className="flex items-center justify-center h-10 cursor-pointer"
+          color={step.color}
           onDragStart={(e: React.DragEvent<HTMLDivElement>) =>
             handleDragStart(e, step)
           }

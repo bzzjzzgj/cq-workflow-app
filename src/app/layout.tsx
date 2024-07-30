@@ -1,10 +1,14 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import ClientLayout from "./clientLayout";
+import { Inter as FontSans } from "next/font/google";
+import { cn } from "@/lib/utils/cn";
+import StoreLayout from "./store";
 
 import "@/styles/tailwind.css";
 
-const inter = Inter({ subsets: ["latin"] });
+const fontSans = FontSans({
+  subsets: ["latin"],
+  variable: "--font-sans",
+});
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -17,12 +21,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="zh-CN"
-      className="text-zinc-950 antialiased lg:bg-zinc-100 dark:bg-zinc-900 dark:text-white dark:lg:bg-zinc-950"
-    >
-      <body className={inter.className}>
-        <ClientLayout>{children}</ClientLayout>
+    <html lang="zh-CN">
+      <body
+        className={cn(
+          "min-h-screen bg-background font-sans antialiased",
+          fontSans.variable
+        )}
+      >
+        <StoreLayout>{children}</StoreLayout>
       </body>
     </html>
   );

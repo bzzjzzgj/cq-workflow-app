@@ -2,9 +2,9 @@
 
 import { ReactNode } from 'react';
 import { Provider } from 'react-redux';
-import store from '@/store';
+import store from '@/lib/store';
 
-const ClientLayout = ({ children }: { children: ReactNode }) => {
+const StoreLayout = ({ children }: { children: ReactNode }) => {
   return (
     <Provider store={store}>
       {children}
@@ -12,4 +12,4 @@ const ClientLayout = ({ children }: { children: ReactNode }) => {
   );
 };
 
-export default ClientLayout;
+export default StoreLayout;

@@ -1,3 +1,4 @@
+import WfProperty from "./property";
 import WfSidebar from "./sidebar";
 
 export default function Layout({
@@ -11,6 +12,9 @@ export default function Layout({
         <WfSidebar />
       </div>
       <div className="flex-1 bg-white">{children}</div>
+      <div className="flex-none p-6 w-[20rem]">
+        <WfProperty />
+      </div>
     </div>
   );
 }
