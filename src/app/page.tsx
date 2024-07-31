@@ -1,12 +1,12 @@
 "use client";
 
 import { Button } from "@/components/ui/catalyst/button";
-import { RootState } from "@/store";
+import { RootState } from "@/lib/store";
 import {
   increment,
   decrement,
   incrementByAmount,
-} from "@/store/slices/counterSlice";
+} from "@/lib/store/slices/counterSlice";
 import { useDispatch, useSelector } from "react-redux";
 
 export default function Home() {
