@@ -23,7 +23,11 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/lib/store";
 
-import { changeEdges, changeSteps } from "@/lib/store/slices/workflowSlice";
+import {
+  changeEdges,
+  changeSteps,
+  selected,
+} from "@/lib/store/slices/workflowSlice";
 
 import Step from "@/lib/types/workflow/step";
 
@@ -31,17 +35,21 @@ import "@xyflow/react/dist/base.css";
 
 import React, { useCallback, useMemo, useRef, useState } from "react";
 import TextUpdaterNode from "@/components/workflow/textUpdateNode";
+import { EdgeData, NodeData } from "@/lib/types/workflow/xyflow";
+import CustomEdge from "@/components/workflow/customEdge";
 
 export default function Example() {
   const dispatch = useDispatch();
 
   const nodes = useSelector((state: RootState) => state.workflow.data.steps);
   const edges = useSelector((state: RootState) => state.workflow.data.edges);
-  const [selfEdges, setSelfEdges] = useState<Array<Edge>>(edges);
-  const [selfNodes, setSelfNodes] = useState<Array<Node>>(nodes);
+  const [selfEdges, setSelfEdges] = useState<Array<Edge<EdgeData>>>(edges);
+  const [selfNodes, setSelfNodes] = useState<Array<Node<NodeData>>>(nodes);
 
   const edgeReconnectSuccessful = useRef(true);
   const nodeTypes = useMemo(() => ({ textUpdater: TextUpdaterNode }), []);
+
+  const edgeTypes = useMemo(() => ({ "custom-edge": CustomEdge }), []);
   const canvasX = useRef(0);
   const canvasY = useRef(0);
 
@@ -63,11 +71,11 @@ export default function Example() {
     dispatch(changeEdges(selfEdges));
   };
 
-  const onNodesChange = (changes: NodeChange<Node>[]) => {
+  const onNodesChange = (changes: NodeChange<Node<NodeData>>[]) => {
     setSelfNodes((s) => applyNodeChanges(changes, selfNodes));
   };
 
-  const onEdgesChange = (changes: EdgeChange[]) => {
+  const onEdgesChange = (changes: EdgeChange<Edge<EdgeData>>[]) => {
     setSelfEdges((s) => applyEdgeChanges(changes, selfEdges));
   };
 
@@ -84,7 +92,7 @@ export default function Example() {
       ...nds,
       {
         id: `${Date.now()}`,
-        data: { label: step.name },
+        data: { name: step.name, value: step.id },
         position: { x: x, y: y },
         type: "textUpdater",
       },
@@ -100,7 +108,8 @@ export default function Example() {
   };
 
   const onConnect = useCallback((params: Connection) => {
-    setSelfEdges((eds) => addEdge(params, eds));
+    const edge: Edge<EdgeData> = { ...params, type: "custom-edge", id: "" };
+    setSelfEdges((eds) => addEdge(edge, eds));
   }, []);
 
   const onReconnectStart = useCallback(() => {
@@ -108,7 +117,7 @@ export default function Example() {
   }, []);
 
   const onReconnect = useCallback(
-    (oldEdge: Edge, newConnection: Connection) =>
+    (oldEdge: Edge<EdgeData>, newConnection: Connection) =>
       setSelfEdges((els) => reconnectEdge(oldEdge, newConnection, els)),
     []
   );
@@ -120,10 +129,18 @@ export default function Example() {
     edgeReconnectSuccessful.current = true;
   }, []);
 
+  const onNodeClick = useCallback(
+    (event: React.MouseEvent, node: Node<NodeData>) => {
+      dispatch(selected(node));
+    },
+    []
+  );
+
   return (
     <div className="h-screen" onDrop={handleDrop} onDragOver={handleDragOver}>
       <ReactFlow
         nodeTypes={nodeTypes}
+        edgeTypes={edgeTypes}
         nodes={selfNodes}
         edges={selfEdges}
         onNodesChange={onNodesChange}
@@ -139,6 +156,7 @@ export default function Example() {
         }}
         minZoom={1}
         maxZoom={1}
+        onNodeClick={onNodeClick}
       >
         <Controls showZoom={false} />
         <MiniMap />

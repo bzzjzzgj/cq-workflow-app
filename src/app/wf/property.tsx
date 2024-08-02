@@ -1,15 +1,5 @@
 "use client";
 
-import {
-  Description,
-  Field,
-  FieldGroup,
-  Fieldset,
-  Label,
-  Legend,
-} from "@/components/ui/catalyst/fieldset";
-import { Select } from "@/components/ui/catalyst/select";
-import { Text } from "@/components/ui/catalyst/text";
 import { Textarea } from "@/components/ui/catalyst/textarea";
 import {
   Accordion,
@@ -22,7 +12,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { z } from "zod";
 
-import { Button } from "@/components/ui/shadcn/button";
 import {
   Form,
   FormControl,
@@ -33,6 +22,15 @@ import {
   FormMessage,
 } from "@/components/ui/shadcn/form";
 import { Input } from "@/components/ui/shadcn/input";
+
+import {
+  changeEdges,
+  changeSteps,
+  selected,
+} from "@/lib/store/slices/workflowSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/lib/store";
+import { useCallback, useState } from "react";
 
 const formSchema = z.object({
   name: z
@@ -57,6 +55,12 @@ const formSchema = z.object({
 });
 
 export default function WfProperty() {
+  const dispatch = useDispatch();
+  const currentNode = useSelector(
+    (state: RootState) => state.workflow.currentNode
+  );
+  const [nodeName, setNodeName] = useState(currentNode?.data.name ?? "");
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
   });
@@ -65,6 +69,20 @@ export default function WfProperty() {
     // Do something with the form data...
     console.log(data);
   };
+
+  const handleNameChange = useCallback(
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      if (currentNode) {
+        const node = {
+          ...currentNode,
+          data: { name: event.target.value },
+        };
+        dispatch(selected(node));
+        setNodeName(event.target.value);
+      }
+    },
+    []
+  );
 
   return (
     <>
@@ -84,7 +102,12 @@ export default function WfProperty() {
                     <FormItem>
                       <FormLabel>名称</FormLabel>
                       <FormControl>
-                        <Input placeholder="shadcn" {...field} />
+                        <Input
+                          placeholder="请输入节点名称"
+                          {...field}
+                          value={nodeName}
+                          onChange={handleNameChange}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -97,7 +120,10 @@ export default function WfProperty() {
                     <FormItem>
                       <FormLabel>描述</FormLabel>
                       <FormControl>
-                        <Textarea placeholder="shadcn" {...field}></Textarea>
+                        <Textarea
+                          placeholder="请输入节点描述"
+                          {...field}
+                        ></Textarea>
                       </FormControl>
                       <FormMessage />
                     </FormItem>

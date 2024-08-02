@@ -1,13 +1,21 @@
-import { useCallback } from "react";
-import { Handle, NodeToolbar, Position } from "@xyflow/react";
+import { NodeData } from "@/lib/types/workflow/xyflow";
+import { Handle, NodeToolbar, Position, Node } from "@xyflow/react";
 
 const handleStyle = "w-4 h-4 !bg-yellow-500 rounded-full";
 
-export default function TextUpdaterNode({ data }) {
-  const onChange = useCallback((evt) => {
-    console.log(evt.target.value);
-  }, []);
+interface NodeDataProps {
+  data: NodeData;
+  toolbarVisible: boolean;
+  toolbarPosition: Position;
+}
 
+export default function TextUpdaterNode({
+  id,
+  data,
+}: {
+  id: string;
+  data: NodeData;
+}) {
   return (
     <>
       <div className="px-4 py-2 shadow-md rounded-md bg-white border-2 border-stone-400">
@@ -16,16 +24,12 @@ export default function TextUpdaterNode({ data }) {
             😀
           </div>
           <div className="ml-2">
-            <div className="text-lg font-bold">{data.label}</div>
+            <div className="text-lg font-bold">{data.name}</div>
             <div className="text-gray-500">1234</div>
           </div>
         </div>
 
-        <NodeToolbar
-          isVisible={data.toolbarVisible}
-          position={data.toolbarPosition}
-          className="flex flex-row gap-4"
-        >
+        <NodeToolbar className="flex flex-row gap-4">
           <button>删除</button>
           <button>copy</button>
           <button>expand</button>

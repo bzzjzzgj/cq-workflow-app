@@ -1,14 +1,15 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Edge, Node } from "@xyflow/react";
+import { EdgeData, NodeData } from "@/lib/types/workflow/xyflow";
 
 interface Workflow {
-  steps: Array<Node>;
-  edges: Array<Edge>;
+  steps: Array<Node<NodeData>>;
+  edges: Array<Edge<EdgeData>>;
 }
 
 interface WorkflowState {
   data: Workflow;
-
+  currentNode?: Node<NodeData>;
   loading: boolean;
   error: string | null;
 }
@@ -32,17 +33,20 @@ const workflowSlice = createSlice({
   name: "workflow",
   initialState,
   reducers: {
-    changeSteps: (state, action: PayloadAction<Array<Node>>) => {
+    changeSteps: (state, action: PayloadAction<Array<Node<NodeData>>>) => {
       state.data.steps = action.payload;
     },
-    changeEdges: (state, action: PayloadAction<Array<Edge>>) => {
+    changeEdges: (state, action: PayloadAction<Array<Edge<EdgeData>>>) => {
       state.data.edges = action.payload;
     },
-    addStep: (state, action: PayloadAction<Node>) => {
+    addStep: (state, action: PayloadAction<Node<NodeData>>) => {
       state.data.steps.push(action.payload);
     },
-    addEdge: (state, action: PayloadAction<Edge>) => {
+    addEdge: (state, action: PayloadAction<Edge<EdgeData>>) => {
       state.data.edges.push(action.payload);
+    },
+    selected: (state, action: PayloadAction<Node<NodeData>>) => {
+      state.currentNode = action.payload;
     },
   },
   extraReducers(builder) {
@@ -65,6 +69,6 @@ const workflowSlice = createSlice({
   },
 });
 
-export const { changeSteps, changeEdges, addStep, addEdge } =
+export const { changeSteps, changeEdges, addStep, addEdge, selected } =
   workflowSlice.actions;
 export default workflowSlice.reducer;
