@@ -10,4 +10,7 @@ export default interface Step {
 
   /** 颜色 */
   color: string;
+
+  /** 节点类型 */
+  type:string;
 }

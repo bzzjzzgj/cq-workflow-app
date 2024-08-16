@@ -24,7 +24,8 @@ export const fetchWorkflows = createAsyncThunk(
     "workflow/fetchWorkflows",
     async () => {
         const response = await fetch("http://localhost:3000/workflows");
-        const data = await response.json();
+        let data: any;
+        data = await response.json();
         return data;
     }
 );
@@ -51,7 +52,7 @@ const workflowSlice = createSlice({
         updateNodeName: (state, action: PayloadAction<string>) => {
             if (state.currentNode) {
                 state.currentNode.data.name = action.payload;
-                state.data.steps = [...state.data.steps.filter(s => s.id !== state.currentNode.id), state.currentNode];
+                state.data.steps = [...state.data.steps.filter(s => s.id !== state.currentNode?.id), state.currentNode];
             }
         },
     },
