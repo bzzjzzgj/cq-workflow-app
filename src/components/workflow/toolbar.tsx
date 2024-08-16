@@ -9,19 +9,24 @@ export default function Toolbar({ id }: { id: string }) {
     const dispatch = useDispatch<AppDispatch>();
     const { setNodes, getNodes } = useReactFlow();
 
-    const handleDelete = () => {
-        setNodes(nds => nds.filter(s => s.id !== id));
-        const nodes = getNodes();
-        dispatch(changeSteps(nodes as Node<NodeData>[]));
+    const handleValueChange = (value: string) => {
+        switch (value) {
+            case "Del":
+                setNodes(nds => nds.filter(s => s.id !== id));
+                const nodes = getNodes();
+                dispatch(changeSteps(nodes as Node<NodeData>[]));
+                break;
+        }
     };
 
     return (
         <>
             <NodeToolbar>
-                <ToggleGroup type="single" className="bg-white shadow-md border rounded">
-                    <ToggleGroupItem value="a">删除</ToggleGroupItem>
-                    <ToggleGroupItem value="b">B</ToggleGroupItem>
-                    <ToggleGroupItem value="c">C</ToggleGroupItem>
+                <ToggleGroup type="single" className="bg-white shadow-md border rounded"
+                             onValueChange={handleValueChange}>
+                    <ToggleGroupItem value="Del">删除</ToggleGroupItem>
+                    <ToggleGroupItem value="b">判断</ToggleGroupItem>
+                    <ToggleGroupItem value="c">线</ToggleGroupItem>
                 </ToggleGroup>
             </NodeToolbar>
         </>

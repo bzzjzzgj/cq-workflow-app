@@ -1,5 +1,6 @@
-import { Handle, NodeToolbar, Position } from "@xyflow/react";
+import { Position } from "@xyflow/react";
 import Toolbar from "@/components/workflow/toolbar";
+import Point from "@/components/workflow/point";
 
 export default function StepEnd({ id }: { id: string }) {
     return (
@@ -11,13 +12,8 @@ export default function StepEnd({ id }: { id: string }) {
             {/* 点击节点时弹出的菜单 */}
             <Toolbar id={id} />
 
-
-            {/* 右侧端口 */}
-            <Handle
-                type="target"
-                position={Position.Left}
-                className="h-6 !bg-teal-500"
-            />
+            {/* 左侧端口 */}
+            <Point type="target" position={Position.Left} />
         </>
     );
 }
