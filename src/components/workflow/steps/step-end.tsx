@@ -1,4 +1,5 @@
 import { Handle, NodeToolbar, Position } from "@xyflow/react";
+import Toolbar from "@/components/workflow/toolbar";
 
 export default function StepEnd({ id }: { id: string }) {
     return (
@@ -8,16 +9,12 @@ export default function StepEnd({ id }: { id: string }) {
             </div>
 
             {/* 点击节点时弹出的菜单 */}
-            <NodeToolbar className="flex flex-row gap-4">
-                <button>删除</button>
-                <button>拷贝</button>
-                <button>展开</button>
-            </NodeToolbar>
+            <Toolbar id={id} />
 
 
             {/* 右侧端口 */}
             <Handle
-                type="source"
+                type="target"
                 position={Position.Left}
                 className="h-6 !bg-teal-500"
             />

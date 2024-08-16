@@ -5,30 +5,30 @@ import {
     getSimpleBezierPath,
     getStraightPath,
     Position,
-    useReactFlow,
+    useReactFlow
 } from "@xyflow/react";
 
-export default function CustomEdge({id, sourceX, sourceY, targetX, targetY}: any) {
-    const {setEdges} = useReactFlow();
+export default function CustomEdge({ id, sourceX, sourceY, targetX, targetY }: any) {
+    const { setEdges } = useReactFlow();
     const [path, labelX, labelY, offsetX, offsetY] = getSimpleBezierPath({
         sourceX: sourceX,
         sourceY: sourceY,
         sourcePosition: Position.Right,
         targetX: targetX,
         targetY: targetY,
-        targetPosition: Position.Left,
+        targetPosition: Position.Left
     });
 
     return (
         <>
-            <BaseEdge id={id} path={path} className="animated"/>
+            <BaseEdge id={id} path={path} className="animated" />
 
             <EdgeLabelRenderer>
                 <button
                     style={{
                         position: "absolute",
                         transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
-                        pointerEvents: "all",
+                        pointerEvents: "all"
                     }}
                     className="nodrag nopan animated"
                     onClick={() => {

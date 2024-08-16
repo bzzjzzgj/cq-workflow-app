@@ -62,9 +62,9 @@ export default function Example() {
     const canvasX = useRef(0);
     const canvasY = useRef(0);
 
-    useEffect(() => {
-        setNodes(initNodes);
-    }, [initNodes]);
+    // useEffect(() => {
+    //     setNodes(initNodes);
+    // }, [initNodes]);
 
     useOnViewportChange({
         onEnd: (viewport: Viewport) => {
@@ -112,7 +112,7 @@ export default function Example() {
     };
 
     const onConnect = useCallback((params: Connection) => {
-        const edge: Edge<EdgeData> = { ...params, type: "custom-edge", id: "" };
+        const edge: Edge<EdgeData> = { ...params, type: "custom-edge", id: `${Date.now()}` };
         setEdges((eds) => addEdge(edge, eds));
     }, []);
 

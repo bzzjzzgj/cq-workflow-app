@@ -19,11 +19,7 @@ export default function TextUpdaterNode({ id, data }: {
             </div>
 
             {/* 点击节点时弹出的菜单 */}
-            <NodeToolbar className="flex flex-row gap-4">
-                <button>删除</button>
-                <button>拷贝</button>
-                <button>展开</button>
-            </NodeToolbar>
+
 
             {/* 左侧端口 */}
             <Handle
